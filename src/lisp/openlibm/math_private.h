@@ -309,7 +309,7 @@ irint(double x)
 #define	__ieee754_yn	yn
 #define	__ieee754_remainder remainder
 #define	__ieee754_sqrtf	sqrtf
-#if 0
+#if 1
 #define	__ieee754_acosf	acosf
 #define	__ieee754_acoshf acoshf
 #define	__ieee754_logf	logf
@@ -332,7 +332,7 @@ extern float __ieee754_coshf(float);
 #define	__ieee754_powf	powf
 #define	__ieee754_lgammaf lgammaf
 #define	__ieee754_lgammaf_r lgammaf_r
-#if 0
+#if 1
 #define	__ieee754_log10f log10f
 #define	__ieee754_log2f log2f
 #define	__ieee754_sinhf	sinhf

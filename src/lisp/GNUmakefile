@@ -38,7 +38,7 @@ SRCS = lisp.c coreparse.c alloc.c monitor.c print.c interr.c \
 	irrat.c \
 	${CORE_MATH_SRCS} \
 	${OPENLIBM_SRCS} \
-	${FDLIBM} ${ARCH_SRC} ${ASSEM_SRC} ${OS_SRC} ${GC_SRC}
+	${ARCH_SRC} ${ASSEM_SRC} ${OS_SRC} ${GC_SRC}
 
 
 OBJS = $(patsubst %.c,%.o,$(patsubst %.S,%.o,$(patsubst %.s,%.o,$(SRCS))))

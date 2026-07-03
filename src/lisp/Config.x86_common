@@ -100,6 +100,35 @@ endif
 ifndef FEATURE_CORE_MATH
 OPENLIBM_DIR = openlibm
 OPENLIBM_SRCS = \
+	$(OPENLIBM_DIR)/e_acos.c \
+	$(OPENLIBM_DIR)/e_acosh.c \
+	$(OPENLIBM_DIR)/e_asin.c \
+	$(OPENLIBM_DIR)/e_atan2.c \
+	$(OPENLIBM_DIR)/e_atanh.c \
+	$(OPENLIBM_DIR)/e_cosh.c \
+	$(OPENLIBM_DIR)/e_exp.c \
+	$(OPENLIBM_DIR)/e_hypot.c \
+	$(OPENLIBM_DIR)/e_log10.c \
+	$(OPENLIBM_DIR)/e_log.c \
+	$(OPENLIBM_DIR)/e_log2.c \
+	$(OPENLIBM_DIR)/e_pow.c \
+	$(OPENLIBM_DIR)/e_rem_pio2.c \
+	$(OPENLIBM_DIR)/e_sinh.c \
+	$(OPENLIBM_DIR)/k_cos.c \
+	$(OPENLIBM_DIR)/k_sin.c \
+	$(OPENLIBM_DIR)/k_tan.c \
+	$(OPENLIBM_DIR)/k_exp.c \
+	$(OPENLIBM_DIR)/s_asinh.c \
+	$(OPENLIBM_DIR)/s_atan.c \
+	$(OPENLIBM_DIR)/s_cos.c \
+	$(OPENLIBM_DIR)/s_expm1.c \
+	$(OPENLIBM_DIR)/s_log1p.c \
+	$(OPENLIBM_DIR)/s_sin.c \
+	$(OPENLIBM_DIR)/s_sincos.c \
+	$(OPENLIBM_DIR)/s_tan.c \
+	$(OPENLIBM_DIR)/s_scalbn.c \
+	$(OPENLIBM_DIR)/k_rem_pio2.c \
+	$(OPENLIBM_DIR)/s_tanhf.c \
 	$(OPENLIBM_DIR)/e_acosf.c \
 	$(OPENLIBM_DIR)/e_acoshf.c \
 	$(OPENLIBM_DIR)/e_asinf.c \
@@ -126,7 +155,8 @@ OPENLIBM_SRCS = \
 	$(OPENLIBM_DIR)/s_sinf.c \
 	$(OPENLIBM_DIR)/s_sincosf.c \
 	$(OPENLIBM_DIR)/s_tanf.c \
-	$(OPENLIBM_DIR)/s_tanhf.c
+	$(OPENLIBM_DIR)/s_tanhf.c \
+	$(OPENLIBM_DIR)/s_scalbnf.c
 endif
 
 ifeq ($(filter 2% 3%, $(shell $(CC) -dumpversion)),)

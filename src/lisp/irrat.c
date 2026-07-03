@@ -7,7 +7,9 @@
 
 #include "lisp.h"
 #include "internals.h"
+#if 0
 #include "fdlibm.h"
+#endif
 
 #ifdef FEATURE_CORE_MATH
 #include <math.h>
@@ -62,6 +64,7 @@ extern float cr_log2f(float);
  * Declare the openlibm functions we use.  This is needed because we
  * changed the names of the openlibm functions.
  */
+#if 0
 extern float openlibm_asinhf(float);
 extern float openlibm_atanf(float);
 extern float openlibm_cosf(float);
@@ -83,7 +86,7 @@ extern float __ieee754_coshf(float);
 extern float __ieee754_log10f(float);
 extern float __ieee754_sinhf(float);
 extern float __ieee754_hypotf(float, float);
-
+#endif
 #endif
 
 
@@ -115,7 +118,7 @@ lisp_sin(double x)
 
     return cr_sin(x);
 #else    
-    return fdlibm_sin(x);
+    return sin(x);
 #endif    
 }
 
@@ -127,7 +130,7 @@ lisp_cos(double x)
 
     return cr_cos(x);
 #else    
-    return fdlibm_cos(x);
+    return cos(x);
 #endif
 }
 
@@ -139,7 +142,7 @@ lisp_tan(double x)
 
     return cr_tan(x);
 #else    
-    return fdlibm_tan(x);
+    return tan(x);
 #endif
 }
 
@@ -149,7 +152,7 @@ lisp_atan(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_atan(x);
 #else    
-    return fdlibm_atan(x);
+    return atan(x);
 #endif
 }
 
@@ -159,7 +162,7 @@ lisp_atan2(double y, double x)
 #ifdef FEATURE_CORE_MATH
     return cr_atan2(y, x);
 #else    
-    return __ieee754_atan2(y, x);
+    return atan2(y, x);
 #endif
 }
 
@@ -169,7 +172,7 @@ lisp_asin(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_asin(x);
 #else    
-    return __ieee754_asin(x);
+    return asin(x);
 #endif
 }
 
@@ -179,7 +182,7 @@ lisp_acos(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_acos(x);
 #else    
-    return __ieee754_acos(x);
+    return acos(x);
 #endif
 }
 
@@ -191,7 +194,7 @@ lisp_sinh(double x)
 	
     return cr_sinh(x);
 #else    
-    return __ieee754_sinh(x);
+    return sinh(x);
 #endif
 }
 
@@ -201,7 +204,7 @@ lisp_cosh(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_cosh(x);
 #else    
-    return __ieee754_cosh(x);
+    return cosh(x);
 #endif
 }
 
@@ -211,7 +214,7 @@ lisp_tanh(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_tanh(x);
 #else    
-    return fdlibm_tanh(x);
+    return tanh(x);
 #endif
 }
 
@@ -223,7 +226,7 @@ lisp_asinh(double x)
 
     return cr_asinh(x);
 #else    
-    return fdlibm_asinh(x);
+    return asinh(x);
 #endif
 }
 
@@ -237,7 +240,7 @@ lisp_acosh(double x)
     
     return cr_acosh(x);
 #else    
-    return __ieee754_acosh(x);
+    return acosh(x);
 #endif
 }
 
@@ -247,7 +250,7 @@ lisp_atanh(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_atanh(x);
 #else    
-    return __ieee754_atanh(x);
+    return atanh(x);
 #endif
 }
 
@@ -278,7 +281,7 @@ lisp_exp(double x)
 
     return cr_exp(x);
 #else    
-    return __ieee754_exp(x);
+    return exp(x);
 #endif
 }
 
@@ -288,7 +291,7 @@ lisp_log(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_log(x);
 #else    
-    return __ieee754_log(x);
+    return log(x);
 #endif
 }
 
@@ -298,7 +301,7 @@ lisp_log10(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_log10(x);
 #else    
-    return __ieee754_log10(x);
+    return log10(x);
 #endif
 }
 
@@ -314,7 +317,7 @@ lisp_pow(double x, double y)
      */
     return cr_pow(x, y);
 #else    
-    return __ieee754_pow(x, y);
+    return pow(x, y);
 #endif
 }
 
@@ -324,7 +327,7 @@ lisp_hypot(double x, double y)
 #ifdef FEATURE_CORE_MATH
     return cr_hypot(x, y);
 #else    
-    return __ieee754_hypot(x, y);
+    return hypot(x, y);
 #endif
 }
 
@@ -334,7 +337,7 @@ lisp_log1p(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_log1p(x);
 #else    
-    return fdlibm_log1p(x);
+    return log1p(x);
 #endif
 }
 
@@ -344,14 +347,14 @@ lisp_expm1(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_expm1(x);
 #else    
-    return fdlibm_expm1(x);
+    return expm1(x);
 #endif
 }
 
 double
 lisp_scalbn(double x, int n)
 {
-    return fdlibm_scalbn(x, n);
+    return scalbn(x, n);
 }
 
 void
@@ -359,10 +362,10 @@ lisp_sincos(double x, double *s, double *c)
 {
 #ifdef FEATURE_CORE_MATH
     cr_sincos(x, s, c);
-#else    
-    extern void cmucl_sincos(double, double*, double*);
+#else
+    extern void sincos(double, double *, double *);
 
-    cmucl_sincos(x, s, c);
+    sincos(x, s, c);
 #endif
 }
 
@@ -372,7 +375,7 @@ lisp_log2(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_log2(x);
 #else
-    return fdlibm_log2(x);
+    return log2(x);
 #endif
 }
 
@@ -388,7 +391,7 @@ lisp_sinf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_sinf(x);
 #else    
-    return openlibm_sinf(x);
+    return sinf(x);
 #endif    
 }
 
@@ -398,7 +401,7 @@ lisp_cosf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_cosf(x);
 #else    
-    return openlibm_cosf(x);
+    return cosf(x);
 #endif
 }
 
@@ -408,7 +411,7 @@ lisp_tanf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_tanf(x);
 #else    
-    return openlibm_tanf(x);
+    return tanf(x);
 #endif
 }
 
@@ -418,7 +421,7 @@ lisp_atanf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_atanf(x);
 #else    
-    return openlibm_atanf(x);
+    return atanf(x);
 #endif
 }
 
@@ -428,7 +431,7 @@ lisp_atan2f(float y, float x)
 #ifdef FEATURE_CORE_MATH
     return cr_atan2f(y, x);
 #else    
-    return __ieee754_atan2f(y, x);
+    return atan2f(y, x);
 #endif
 }
 
@@ -438,7 +441,7 @@ lisp_asinf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_asinf(x);
 #else    
-    return __ieee754_asinf(x);
+    return asinf(x);
 #endif
 }
 
@@ -448,7 +451,7 @@ lisp_acosf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_acosf(x);
 #else    
-    return __ieee754_acosf(x);
+    return acosf(x);
 #endif
 }
 
@@ -458,7 +461,7 @@ lisp_sinhf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_sinhf(x);
 #else    
-    return __ieee754_sinhf(x);
+    return sinhf(x);
 #endif
 }
 
@@ -468,7 +471,7 @@ lisp_coshf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_coshf(x);
 #else    
-    return __ieee754_coshf(x);
+    return coshf(x);
 #endif
 }
 
@@ -478,7 +481,7 @@ lisp_tanhf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_tanhf(x);
 #else    
-    return openlibm_tanhf(x);
+    return tanhf(x);
 #endif
 }
 
@@ -488,7 +491,7 @@ lisp_asinhf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_asinhf(x);
 #else    
-    return openlibm_asinhf((double) x);
+    return asinhf((double) x);
 #endif
 }
 
@@ -498,7 +501,7 @@ lisp_acoshf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_acoshf(x);
 #else    
-    return __ieee754_acoshf(x);
+    return acoshf(x);
 #endif
 }
 
@@ -508,7 +511,7 @@ lisp_atanhf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_atanhf(x);
 #else    
-    return __ieee754_atanhf(x);
+    return atanhf(x);
 #endif
 }
 
@@ -518,7 +521,7 @@ lisp_expf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_expf(x);
 #else    
-    return __ieee754_expf(x);
+    return expf(x);
 #endif
 }
 
@@ -528,7 +531,7 @@ lisp_logf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_logf(x);
 #else    
-    return __ieee754_log(x);
+    return log(x);
 #endif
 }
 
@@ -538,7 +541,7 @@ lisp_log10f(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_log10f(x);
 #else    
-    return __ieee754_log10f(x);
+    return log10f(x);
 #endif
 }
 
@@ -570,7 +573,7 @@ lisp_hypotf(float x, float y)
 #ifdef FEATURE_CORE_MATH
     return cr_hypotf(x, y);
 #else    
-    return __ieee754_hypotf(x, y);
+    return hypotf(x, y);
 #endif
 }
 
@@ -580,7 +583,7 @@ lisp_log1pf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_log1pf(x);
 #else    
-    return openlibm_log1pf(x);
+    return log1pf(x);
 #endif
 }
 
@@ -590,7 +593,7 @@ lisp_expm1f(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_expm1f(x);
 #else    
-    return openlibm_expm1f(x);
+    return expm1f(x);
 #endif
 }
 
@@ -600,9 +603,9 @@ lisp_sincosf(float x, float *s, float *c)
 #ifdef FEATURE_CORE_MATH
     cr_sincosf(x, s, c);
 #else    
-    extern void openlibm_sincosf(float x, float *s, float *c);
+    extern void sincosf(float, float *, float *);
 
-    openlibm_sincosf(x, s, c);
+    sincosf(x, s, c);
 #endif
 }
 
@@ -612,6 +615,6 @@ lisp_log2f(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_log2f(x);
 #else
-    return __ieee754_log2f(x);
+    return log2f(x);
 #endif
 }
