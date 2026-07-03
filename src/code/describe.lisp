@@ -346,16 +346,39 @@
 			      (string (write-string args))
 			      (list (prin1 args)))))))
 
+;;; MACRO-FUNCTION-NAME  --  Internal
+;;;
+;;;    A macroexpander function carries the name (:macro <sym>).  When
+;;; describe is handed such a function directly (rather than the symbol
+;;; naming the macro), KIND is NIL and NAME is (:macro <sym>).  Recognize
+;;; that form and return the effective kind (:macro) and the real name
+;;; <sym>, so the arglist and documentation can be found.  Otherwise
+;;; return KIND and NAME unchanged.
+;;;
+(defun macro-function-name (kind name)
+  (if (and (consp name) (eq (car name) :macro))
+      (values :macro (second name))
+      (values kind name)))
+
 ;;; DESCRIBE-FUNCTION-COMPILED  --  Internal
 ;;;
 ;;;    Describe a compiled function.  The closure case calls us to print the
 ;;; guts.
 ;;;
 (defun describe-function-compiled (x kind name)
-  (let ((args (%function-arglist x)))
-    (print-function/macro-arglist kind args (not (null args))))
-
   (let ((name (or name (%function-name x))))
+    (multiple-value-setq (kind name)
+      (macro-function-name kind name))
+    (let ((args (%function-arglist x)))
+      ;; A macro's function header may not carry the arglist (e.g. when
+      ;; byte-compiled or compiled at a low debug level), so fall back
+      ;; to the saved macro-arglist.
+      (if (and (eq kind :macro) (null args))
+	  (multiple-value-bind (margs knownp)
+	      (c::info :function :macro-arglist name)
+	    (print-function/macro-arglist kind margs knownp))
+	  (print-function/macro-arglist kind args (not (null args)))))
+
     (desc-doc name 'function kind)
     (unless (eq kind :macro)
       (describe-function-name name (%function-type x))))
@@ -367,6 +390,8 @@
 ;;;    Describe a byte-compiled function.
 (defun describe-function-byte-compiled (x kind name)
   (let ((name (or name (c::byte-function-name x))))
+    (multiple-value-setq (kind name)
+      (macro-function-name kind name))
     (when (eq kind :macro)
       (multiple-value-bind (args knownp)
 	  (c::info :function :macro-arglist name)
