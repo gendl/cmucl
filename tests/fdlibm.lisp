@@ -172,10 +172,11 @@
 (define-test %log1p.exceptions
   (:tag :fdlibm)
   (assert-error 'floating-point-invalid-operation
-		(kernel:%log1p -2d0))
-  (assert-error #-core-math 'floating-point-overflow
-		#+core-math 'division-by-zero
-		(kernel:%log1p -1d0))
+		(kernel:%log1p -2d0)
+		-2d0)
+  (assert-error 'floating-point-overflow
+		(kernel:%log1p -1d0)
+		-1d0)
   (assert-true (ext:float-nan-p (kernel:%log1p *qnan*)))
   (ext:with-float-traps-masked (#-core-math :overflow
 				#+core-math :divide-by-zero)
@@ -438,8 +439,12 @@
     (assert-eql 2.1474836479999983d9 (cosh (- x))))
   ;; cosh(710.4758600739439), case log(maxdouble) <= |x| <= overflowthreshold
   (let ((x 710.4758600739439d0))
-    (assert-eql 1.7976931348621744d308 (cosh x))
-    (assert-eql 1.7976931348621744d308 (cosh (- x)))))
+    (assert-eql #+core-math 1.7976931348621744d308
+		#-core-math 1.7976931348621746d308
+		(cosh x))
+    (assert-eql #+core-math 1.7976931348621744d308
+		#-core-math 1.7976931348621746d308
+		(cosh (- x)))))
 
 (define-test exp-basic-tests
     (:tag :fdlibm)
@@ -602,7 +607,8 @@
     (assert-eql (- y) (sinh -100d0)))
   ;; sinh(710....), no overflow, case |x| in [log(maxdouble), overflowthreshold]
   (let ((x 710.4758600739439d0)
-	(y 1.7976931348621744d308))
+	(y #+core-math 1.7976931348621744d308
+	   #-core-math 1.7976931348621746d308))
     (assert-eql y (sinh x))
     (assert-eql (- y) (sinh (- x))))
   ;; sinh(710.475860073944), overflow, case |x| > ovfthreshold]
