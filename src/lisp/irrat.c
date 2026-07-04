@@ -364,6 +364,9 @@ lisp_expm1(double x)
 double
 lisp_scalbn(double x, int n)
 {
+    /* Signal overflow if x is infinity, for an value of n. */
+    MAYBE_SIGNAL_OVERFLOW(x);
+
     return scalbn(x, n);
 }
 
