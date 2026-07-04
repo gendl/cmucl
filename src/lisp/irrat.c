@@ -344,18 +344,18 @@ lisp_hypot(double x, double y)
 double
 lisp_log1p(double x)
 {
+    /*
+     * log1p(-1) should signal overflow, for backward compatibility
+     * with fdlibm, not division-by-zero. If overflow is masked,
+     * return -infinity.
+     */
+    if (x == -1.0) {
+	return fdlibm_setexception(x, FDLIBM_OVERFLOW);
+    }
+
 #ifdef FEATURE_CORE_MATH
     return cr_log1p(x);
 #else
-    /*
-     * log1p(-1) signals overflow, not division-by-zero. If overflow
-     * is masked, return -infinity.
-     */
-    if (x == -1.0) {
-	fdlibm_setexception(x, FDLIBM_OVERFLOW);
-	return -1e300 * 1e300;
-    }
-
     return log1p(x);
 #endif
 }

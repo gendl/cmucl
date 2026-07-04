@@ -178,8 +178,7 @@
 		(kernel:%log1p -1d0)
 		-1d0)
   (assert-true (ext:float-nan-p (kernel:%log1p *qnan*)))
-  (ext:with-float-traps-masked (#-core-math :overflow
-				#+core-math :divide-by-zero)
+  (ext:with-float-traps-masked (:overflow)
     (assert-equal ext:double-float-negative-infinity
 		  (kernel:%log1p -1d0)))
   (ext:with-float-traps-masked (:invalid)
