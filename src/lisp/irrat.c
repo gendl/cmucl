@@ -11,6 +11,16 @@
 #include "fdlibm.h"
 #endif
 
+enum FDLIBM_EXCEPTION {
+  FDLIBM_DIVIDE_BY_ZERO,
+  FDLIBM_UNDERFLOW,
+  FDLIBM_OVERFLOW,
+  FDLIBM_INVALID,
+  FDLIBM_INEXACT
+};
+
+extern double fdlibm_setexception(double x, enum FDLIBM_EXCEPTION);
+
 #ifdef FEATURE_CORE_MATH
 #include <math.h>
 extern double cr_sin(double);
