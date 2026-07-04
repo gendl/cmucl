@@ -224,6 +224,9 @@ lisp_asinh(double x)
 
     return cr_asinh(x);
 #else    
+    /* Signal overflow for infinities */
+    MAYBE_SIGNAL_OVERFLOW(x);
+
     return asinh(x);
 #endif
 }
@@ -238,6 +241,8 @@ lisp_acosh(double x)
     
     return cr_acosh(x);
 #else    
+    MAYBE_SIGNAL_OVERFLOW(x);
+
     return acosh(x);
 #endif
 }
@@ -334,7 +339,16 @@ lisp_log1p(double x)
 {
 #ifdef FEATURE_CORE_MATH
     return cr_log1p(x);
-#else    
+#else
+    /*
+     * log1p(-1) signals overflow, not division-by-zero. If overflow
+     * is masked, return -infinity.
+     */
+    if (x == -1.0) {
+	fdlibm_setexception(x, FDLIBM_OVERFLOW);
+	return -1e300 * 1e300;
+    }
+
     return log1p(x);
 #endif
 }
