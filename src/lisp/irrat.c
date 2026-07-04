@@ -320,6 +320,13 @@ lisp_pow(double x, double y)
      */
     return cr_pow(x, y);
 #else    
+    /*
+     * (+/-1)^(+/- inf) signals invalid
+     */
+    if ((fabs(x) == 1.0) && isinf(y)) {
+	return fdlibm_setexception(x, FDLIBM_INVALID);
+    }
+
     return pow(x, y);
 #endif
 }
