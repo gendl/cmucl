@@ -24,14 +24,15 @@ include Config
 
 OPENLIBM_DIR = openlibm
 CPPFLAGS += -I $(PATH1)/$(OPENLIBM_DIR) -DOPENLIBM_USE_HOST_MATH_H
-OPENLIBM_SRCS = \
+OPENLIBM_PIO2 = \
 	$(OPENLIBM_DIR)/e_rem_pio2.c \
 	$(OPENLIBM_DIR)/k_rem_pio2.c
 
 # If core-math is not defined such as on Darwin, we use the code from
 # openlibm to implement the special functions for single-floats.
 ifndef FEATURE_CORE_MATH
-OPENLIBM_SRCS += \
+# All the double-float special functions we need from openlibm
+OPENLIBM_DOUBLE = \
 	$(OPENLIBM_DIR)/e_acos.c \
 	$(OPENLIBM_DIR)/e_acosh.c \
 	$(OPENLIBM_DIR)/e_asin.c \
@@ -41,52 +42,31 @@ OPENLIBM_SRCS += \
 	$(OPENLIBM_DIR)/e_exp.c \
 	$(OPENLIBM_DIR)/e_hypot.c \
 	$(OPENLIBM_DIR)/e_log10.c \
-	$(OPENLIBM_DIR)/e_log.c \
 	$(OPENLIBM_DIR)/e_log2.c \
+	$(OPENLIBM_DIR)/e_log.c \
 	$(OPENLIBM_DIR)/e_pow.c \
 	$(OPENLIBM_DIR)/e_sinh.c \
 	$(OPENLIBM_DIR)/k_cos.c \
+	$(OPENLIBM_DIR)/k_exp.c \
 	$(OPENLIBM_DIR)/k_sin.c \
 	$(OPENLIBM_DIR)/k_tan.c \
-	$(OPENLIBM_DIR)/k_exp.c \
 	$(OPENLIBM_DIR)/s_asinh.c \
 	$(OPENLIBM_DIR)/s_atan.c \
 	$(OPENLIBM_DIR)/s_cos.c \
 	$(OPENLIBM_DIR)/s_expm1.c \
 	$(OPENLIBM_DIR)/s_log1p.c \
-	$(OPENLIBM_DIR)/s_sin.c \
-	$(OPENLIBM_DIR)/s_sincos.c \
-	$(OPENLIBM_DIR)/s_tan.c \
 	$(OPENLIBM_DIR)/s_scalbn.c \
-	$(OPENLIBM_DIR)/s_tanhf.c \
-	$(OPENLIBM_DIR)/e_acosf.c \
-	$(OPENLIBM_DIR)/e_acoshf.c \
-	$(OPENLIBM_DIR)/e_asinf.c \
-	$(OPENLIBM_DIR)/e_atan2f.c \
-	$(OPENLIBM_DIR)/e_atanhf.c \
-	$(OPENLIBM_DIR)/e_coshf.c \
-	$(OPENLIBM_DIR)/e_expf.c \
-	$(OPENLIBM_DIR)/e_hypotf.c \
-	$(OPENLIBM_DIR)/e_log10f.c \
-	$(OPENLIBM_DIR)/e_logf.c \
-	$(OPENLIBM_DIR)/e_log2f.c \
-	$(OPENLIBM_DIR)/e_powf.c \
+	$(OPENLIBM_DIR)/s_sincos.c \
+	$(OPENLIBM_DIR)/s_sin.c \
+	$(OPENLIBM_DIR)/s_tan.c \
+	$(OPENLIBM_DIR)/s_tanh.c \
+
+# Single-float versions from openlibm we need
+OPENLIBM_FLOAT = \
 	$(OPENLIBM_DIR)/e_rem_pio2f.c \
-	$(OPENLIBM_DIR)/e_sinhf.c \
-	$(OPENLIBM_DIR)/k_cosf.c \
-	$(OPENLIBM_DIR)/k_sinf.c \
-	$(OPENLIBM_DIR)/k_tanf.c \
-	$(OPENLIBM_DIR)/k_expf.c \
-	$(OPENLIBM_DIR)/s_asinhf.c \
-	$(OPENLIBM_DIR)/s_atanf.c \
-	$(OPENLIBM_DIR)/s_cosf.c \
-	$(OPENLIBM_DIR)/s_expm1f.c \
-	$(OPENLIBM_DIR)/s_log1pf.c \
-	$(OPENLIBM_DIR)/s_sinf.c \
-	$(OPENLIBM_DIR)/s_sincosf.c \
-	$(OPENLIBM_DIR)/s_tanf.c \
-	$(OPENLIBM_DIR)/s_tanhf.c \
-	$(OPENLIBM_DIR)/s_scalbnf.c
+	$(OPENLIBM_DOUBLE:.c=f.c) 
+
+OPENLIBM_SRCS += $(OPENLIBM_DOUBLE) $(OPENLIBM_FLOAT)
 endif
 
 SRCS = lisp.c coreparse.c alloc.c monitor.c print.c interr.c \
@@ -96,6 +76,7 @@ SRCS = lisp.c coreparse.c alloc.c monitor.c print.c interr.c \
 	irrat.c \
 	setexception.c \
 	${CORE_MATH_SRCS} \
+	$(OPENLIBM_PIO2) \
 	${OPENLIBM_SRCS} \
 	${ARCH_SRC} ${ASSEM_SRC} ${OS_SRC} ${GC_SRC}
 
