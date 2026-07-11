@@ -2,6 +2,10 @@
 
 include Config.x86_common
 
+# Gcc miscompiles openlibm/s_asinh.c causing spurious overflow.  Clang
+# with -ftrapping-math doesn't seem to.
+CC = clang -ftrapping-math
+
 # Compile code that will run on OSX 10.6.  This only works if
 # you have the SDK available.
 MIN_VER = -mmacosx-version-min=10.6
