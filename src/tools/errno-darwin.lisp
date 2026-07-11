@@ -104,4 +104,4 @@
 (defconstant ENOPOLICY 103)
 (defconstant ENOTRECOVERABLE 104)
 (defconstant EOWNERDEAD 105)
-(defconstant EQLAST 106)
+(defconstant ELAST 106)
