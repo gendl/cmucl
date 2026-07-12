@@ -87,33 +87,35 @@ find_errno ()
     # Linux, Darwin, and Solaris (with Sun C) to dump the macros
     # defined in errno.h.  The results are sorted in ascending
     # numerical order and aliases follow the original definition.
-    echo '#include <errno.h>' |
-	cpp -dM - |
-	awk '
+echo "#include <errno.h>" |
+    cpp -dM - |
+    awk '
 BEGIN {
     max = 0
 }
-# Pattern is "#define EFOO number"
-/^#define[ \t]+E[A-Z0-9]+[ \t]+[0-9]+/ {
-    value[$2] = $3 + 0
-    max = ($3 + 0 > max) ? $3 + 0 : max
+/^#define[ \t]+(E[A-Z0-9]+)[ \t]+([0-9]+)/ {
+    if ($3 in errno) {
+	alias[errno[$3]] = alias[errno[$3]] " " $2
+    } else {
+	errno[$3] = $2
+	max = ($3 > max) ? $3 : max
+    }
 }
-# Pattern is "#define EFOO EALIAS"
-/^#define[ \t]+E[A-Z0-9]+[ \t]+E[A-Z0-9]+/ {
-    alias[$2] = $3
+/^#define[ \t]+(E[A-Z0-9]+)[ \t]+(E[A-Z0-9]+)/ {
+    alias[$3] = alias[$3] " " $2
 }
 END {
-    # Print out each errno and print the alias right after the actual value
-    for (i = 0; i <= max; i++)
-        for (name in value)
-            if (value[name] == i) {
-                printf "(defconstant %s %d)\n", name, i
-                for (a in alias)
-                    if (alias[a] == name)
-                        printf "(defconstant %s %s)\n", a, name
-            }
+    for (i = 0; i <= max; i++) {
+	if (i in errno) {
+	    printf "(defconstant %s %d)\n", errno[i], i
+	    if (errno[i] in alias) {
+		n = split(alias[errno[i]], names, " ")
+		for (j = 1; j <= n; j++)
+		    printf "(defconstant %s %s)\n", names[j], errno[i]
+	    }
+	}
+    }
 }'
-
 }
 
 if [ "$UPDATE" = "yes" ]; then
