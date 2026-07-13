@@ -93,7 +93,11 @@ echo "#include <errno.h>" |
 BEGIN {
     max = 0
 }
+# Pattern is "#define EFOO number"
 /^#define[ \t]+(E[A-Z0-9]+)[ \t]+([0-9]+)/ {
+    # If "number" has already been recorded, make this one an alias of
+    # the original by appending this to any existing aliases.  Otherwise
+    # add the entry to errno array.
     if ($3 in errno) {
 	alias[errno[$3]] = alias[errno[$3]] " " $2
     } else {
@@ -101,10 +105,14 @@ BEGIN {
 	max = ($3 > max) ? $3 : max
     }
 }
+# Pattern is "#define EFOO EALIAS"
 /^#define[ \t]+(E[A-Z0-9]+)[ \t]+(E[A-Z0-9]+)/ {
+    # Append this to the alias array
     alias[$3] = alias[$3] " " $2
 }
 END {
+    # Print out each errno/alias in numerical order, with any aliases just
+    # after the primary.
     for (i = 0; i <= max; i++) {
 	if (i in errno) {
 	    printf "(defconstant %s %d)\n", errno[i], i
