@@ -488,6 +488,8 @@ lisp_asinhf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_asinhf(x);
 #else    
+    MAYBE_SIGNAL_OVERFLOW(x);
+
     return openlibm_asinhf((double) x);
 #endif
 }
@@ -498,6 +500,10 @@ lisp_acoshf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_acoshf(x);
 #else    
+    if (x > 0) {
+	MAYBE_SIGNAL_OVERFLOW(x);
+    }
+
     return __ieee754_acoshf(x);
 #endif
 }
