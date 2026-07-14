@@ -60,7 +60,7 @@ OPENLIBM_DOUBLE = \
 
 OPENLIBM_FLOAT = \
 	$(OPENLIBM_DIR)/e_rem_pio2f.c \
-	${OPENLIBM_DOUBLE: .c = f.c }
+	$(patsubst %.c, %f.c, $(OPENLIBM_DOUBLE))
 
 
 OPENLIBM_SRCS = $(OPENLIBM_DOUBLE) $(OPENLIBM_FLOAT)
