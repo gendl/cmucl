@@ -192,9 +192,9 @@ lisp_tanh(double x)
 double
 lisp_asinh(double x)
 {
-#ifdef FEATURE_CORE_MATH
     MAYBE_SIGNAL_OVERFLOW(x);
 
+#ifdef FEATURE_CORE_MATH
     return cr_asinh(x);
 #else    
     return asinh(x);
@@ -204,11 +204,10 @@ lisp_asinh(double x)
 double
 lisp_acosh(double x)
 {
-#ifdef FEATURE_CORE_MATH
     MAYBE_SIGNAL_INVALID(x < 1, x);
-
     MAYBE_SIGNAL_OVERFLOW(x);
-    
+
+#ifdef FEATURE_CORE_MATH
     return cr_acosh(x);
 #else    
     return acosh(x);
@@ -288,6 +287,12 @@ lisp_pow(double x, double y)
      */
     return cr_pow(x, y);
 #else    
+    /*
+     * (+/- 1)^(+/- infinity) signals invalid or returns NaN
+     */
+
+    MAYBE_SIGNAL_INVALID(((fabs(x) == 1) && isinf(y)), x);
+
     return pow(x, y);
 #endif
 }
@@ -308,6 +313,16 @@ lisp_log1p(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_log1p(x);
 #else    
+
+    /*
+     * log1p(-1) should signal overflow, for backward compatibility
+     * with fdlibm, not division-by-zero. If overflow is masked,
+     * return -infinity.
+     */
+    if (x == -1.0) {
+	return fdlibm_setexception(x, FDLIBM_OVERFLOW);
+    }
+
     return log1p(x);
 #endif
 }
@@ -325,6 +340,10 @@ lisp_expm1(double x)
 double
 lisp_scalbn(double x, int n)
 {
+
+    /* Signal overflow if x is infinity, for an value of n. */
+    MAYBE_SIGNAL_OVERFLOW(x);
+
     return scalbn(x, n);
 }
 
