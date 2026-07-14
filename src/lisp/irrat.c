@@ -185,6 +185,13 @@ lisp_tanh(double x)
 #ifdef FEATURE_CORE_MATH
     return cr_tanh(x);
 #else    
+    /*
+     * Signal invalid.  A peek at openlibm/s_tanh.c indicates that the
+     * result is always 1 for |x| >= 22.
+     */
+    if (isnormal(x) && (fabs(x) >= 22)) {
+	fdlibm_setexception(x, FDLIBM_INEXACT);
+    }
     return tanh(x);
 #endif
 }
