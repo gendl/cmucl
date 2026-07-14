@@ -20,7 +20,10 @@ all: lisp.nm
 include Config
 
 # Need rem_pio2 routines because double-double routines need these for
-# pi reduction.
+# pi reduction.  This is independent of whether we are using core-math
+# or not.
+OPENLIBM_DIR = openlibm
+CPPFLAGS += -I $(PATH1)/$(OPENLIBM_DIR) -DOPENLIBM_USE_HOST_MATH_H
 
 REM_PIO2 = \
 	$(OPENLIBM_DIR)/e_rem_pio2.c \
