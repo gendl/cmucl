@@ -22,7 +22,6 @@ include Config
 # Need rem_pio2 routines because double-double routines need these for
 # pi reduction.
 
-OPENLIBM_DIR = openlibm
 REM_PIO2 = \
 	$(OPENLIBM_DIR)/e_rem_pio2.c \
 	$(OPENLIBM_DIR)/k_rem_pio2.c
