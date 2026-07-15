@@ -53,6 +53,7 @@ OPENLIBM_DOUBLE = \
 	$(OPENLIBM_DIR)/s_cos.c \
 	$(OPENLIBM_DIR)/s_expm1.c \
 	$(OPENLIBM_DIR)/s_log1p.c \
+	$(OPENLIBM_DIR)/s_scalbn.c \
 	$(OPENLIBM_DIR)/s_sin.c \
 	$(OPENLIBM_DIR)/s_sincos.c \
 	$(OPENLIBM_DIR)/s_tan.c \
