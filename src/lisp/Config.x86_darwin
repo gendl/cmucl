@@ -2,6 +2,12 @@
 
 include Config.x86_common
 
+# gcc appears to miscompile some openlibm code so that unexpected
+# overflows happen.
+#
+# Use clang instead, which doesn't seem to have this problem.
+CC = clang
+
 # Compile code that will run on OSX 10.6.  This only works if
 # you have the SDK available.
 MIN_VER = -mmacosx-version-min=10.6
