@@ -5,8 +5,10 @@ include Config.x86_common
 # gcc appears to miscompile some openlibm code so that unexpected
 # overflows happen.
 #
-# Use clang instead, which doesn't seem to have this problem.
-CC = clang
+# Use clang instead, which doesn't seem to have this problem.  But
+# stock clang doesn't work.  Use MacPorts clang (14.0.6) which
+# compiles openlibm to handle FP exceptions as we expect.
+CC = /opt/local/bin/clang -ftrapping-math
 
 # Compile code that will run on OSX 10.6.  This only works if
 # you have the SDK available.
