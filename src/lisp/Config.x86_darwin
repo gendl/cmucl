@@ -2,13 +2,17 @@
 
 include Config.x86_common
 
-# gcc appears to miscompile some openlibm code so that unexpected
-# overflows happen.
+# Stock clang (and cc) on MacOS doesn't compile openlibm to handle FP
+# exceptions the way we want.  Exceptions aren't signaled.
 #
-# Use clang instead, which doesn't seem to have this problem.  But
-# stock clang doesn't work.  Use MacPorts clang (14.0.6) which
-# compiles openlibm to handle FP exceptions as we expect.
-CC = /opt/local/bin/clang -ftrapping-math
+# Instead, use MacPorts to get more recent versions of the compilers.
+# We currently use clang 14.0.6 and gcc 12.1.0.  With these compilers,
+# openlibm is compiled correctly to signal the desired FP exceptions.
+#
+# The unit tests pass and so do the ansi-tests.
+
+#CC = /opt/local/bin/clang -ftrapping-math
+CC = /opt/local/bin/gcc
 
 # Compile code that will run on OSX 10.6.  This only works if
 # you have the SDK available.
