@@ -1801,7 +1801,7 @@ Z may be any number, but the result is always a complex."
 			   (inhibit-warnings 3)))
       (cond ((> (abs x)
                 ;; Don't need double-double accuracy here.
-		#.(/ (%asinh most-positive-double-float) 4d0))
+		(/ (asinh most-positive-double-float) 4d0))
 	     (complex (float-sign x)
 		      (float-sign y 0w0)))
 	    (t
