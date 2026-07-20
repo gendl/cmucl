@@ -485,6 +485,8 @@ lisp_tanhf(float x)
 float
 lisp_asinhf(float x)
 {
+    MAYBE_SIGNAL_OVERFLOW(x);
+
 #ifdef FEATURE_CORE_MATH
     return cr_asinhf(x);
 #else    
@@ -498,6 +500,9 @@ lisp_acoshf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_acoshf(x);
 #else    
+    MAYBE_SIGNAL_INVALID(x < 1, x);
+    MAYBE_SIGNAL_OVERFLOW(x);
+
     return acoshf(x);
 #endif
 }
@@ -580,6 +585,15 @@ lisp_log1pf(float x)
 #ifdef FEATURE_CORE_MATH
     return cr_log1pf(x);
 #else    
+    /*
+     * log1p(-1) should signal overflow, for backward compatibility
+     * with fdlibm, not division-by-zero. If overflow is masked,
+     * return -infinity.
+     */
+    if (x == -1.0) {
+	return fdlibm_setexception(x, FDLIBM_OVERFLOW);
+    }
+
     return log1pf(x);
 #endif
 }
