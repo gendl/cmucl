@@ -98,9 +98,9 @@
     (assert-equal ext:single-float-negative-infinity
 		  (kernel:%sinhf -1000f0))
     (assert-equal ext:single-float-positive-infinity
-		  (kernel:%sinh ext:single-float-positive-infinity))
+		  (kernel:%sinhf ext:single-float-positive-infinity))
     (assert-equal ext:single-float-negative-infinity
-		  (kernel:%sinh ext:single-float-negative-infinity)))
+		  (kernel:%sinhf ext:single-float-negative-infinity)))
   ;; Test NaN
   (ext:with-float-traps-masked (:invalid)
     (assert-true (ext:float-nan-p (kernel:%sinh *qnan*)))
